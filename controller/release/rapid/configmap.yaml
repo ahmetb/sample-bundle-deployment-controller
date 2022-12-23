@@ -1,0 +1,10 @@
+# Copyright 2022 Ahmet Alp Balkan
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+data:
+  data-1: value-1
+  data-2: value-2

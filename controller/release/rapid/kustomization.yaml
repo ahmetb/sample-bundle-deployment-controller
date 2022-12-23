@@ -1,0 +1,6 @@
+# Copyright 2022 Ahmet Alp Balkan
+
+resources:
+- deployment.yaml
+- secret.yaml
+- configmap.yaml

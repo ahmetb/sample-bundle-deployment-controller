@@ -1,0 +1,9 @@
+# Copyright 2022 Ahmet Alp Balkan
+
+apiVersion: ahmet.dev/v1alpha1
+kind: BundleDeployment
+metadata:
+    name: demo
+spec:
+    replicas: 3
+    releaseBundle: rapid
