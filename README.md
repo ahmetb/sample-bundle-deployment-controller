@@ -24,4 +24,4 @@ Copyright 2022 Ahmet Alp Balkan.
 
 1. Apply the sample manifest:
 
-       kubectl apply -f example-bundle-deployment.yaml
+       kubectl apply -f example-deployment.yaml
