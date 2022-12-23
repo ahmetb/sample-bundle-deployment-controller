@@ -34,6 +34,11 @@ type BundleDeploymentStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="BUNDLE",type="string",JSONPath=".spec.releaseBundle"
+// +kubebuilder:printcolumn:name="GENERATION",type="integer",JSONPath=".metadata.generation"
+// +kubebuilder:printcolumn:name="OBSERVED_GEN",type="integer",JSONPath=".status.observedGeneration"
+// +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
+
 type BundleDeployment struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

@@ -15,7 +15,20 @@ spec:
     singular: bundledeployment
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.releaseBundle
+      name: BUNDLE
+      type: string
+    - jsonPath: .metadata.generation
+      name: GENERATION
+      type: integer
+    - jsonPath: .status.observedGeneration
+      name: OBSERVED GENERATION
+      type: integer
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         properties:
