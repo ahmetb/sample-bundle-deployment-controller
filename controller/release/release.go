@@ -9,34 +9,38 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	"path"
 	"path/filepath"
 )
 
 var (
-	//go:embed stable/*
-	stableManifests embed.FS
+	//go:embed bundles/*
+	bundleManifests embed.FS
 
-	//go:embed rapid/*
-	rapidManifests embed.FS
-
-	ReleaseBundles = map[string]ReleaseBundle{
-		"rapid": {
-			bundle:                 rapidManifests,
-			sourceDir:              "rapid",
-			DeploymentResourceName: "nginx-deployment",
-		},
-		"stable": {
-			bundle:                 stableManifests,
-			sourceDir:              "stable",
-			DeploymentResourceName: "nginx-deployment",
-		},
-	}
+	ReleaseBundles = map[string]ReleaseBundle{}
 )
 
 type ReleaseBundle struct {
-	bundle                 fs.FS
-	sourceDir              string
-	DeploymentResourceName string
+	bundle fs.FS
+}
+
+func init() {
+	// load embedded release bundles
+	var err error
+	for _, name := range []string{"rapid", "stable"} {
+		ReleaseBundles[name], err = extractBundle(bundleManifests, name)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
+func extractBundle(embeddedBundles embed.FS, name string) (ReleaseBundle, error) {
+	subFS, err := fs.Sub(embeddedBundles, path.Join("bundles", name))
+	if err != nil {
+		return ReleaseBundle{}, fmt.Errorf("failed to load embedded bundle %q: :%w", name, err)
+	}
+	return ReleaseBundle{bundle: subFS}, nil
 }
 
 // Checksum gives a sha256sum of all files in filepath.WalkDir order.
@@ -71,12 +75,7 @@ func (r ReleaseBundle) Checksum() (string, error) {
 
 // WriteTo writes the release bundle contents to specified directory
 func (r ReleaseBundle) WriteTo(dir string) error {
-	srcBundle, err := fs.Sub(r.bundle, r.sourceDir)
-	if err != nil {
-		return err
-	}
-
-	return fs.WalkDir(srcBundle, ".", func(path string, d fs.DirEntry, err error) error {
+	return fs.WalkDir(r.bundle, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -90,7 +89,7 @@ func (r ReleaseBundle) WriteTo(dir string) error {
 		}
 		defer f.Close()
 
-		inFile, err := srcBundle.Open(path)
+		inFile, err := r.bundle.Open(path)
 		if err != nil {
 			return err
 		}

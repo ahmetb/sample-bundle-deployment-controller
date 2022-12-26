@@ -50,9 +50,9 @@ func WithReplicasPatch(replicas int) ManifestBuilderOption {
 		WithKustomizePatch(fmt.Sprintf(`apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: %s
+  name: nginx-deployment
 spec:
-  replicas: %d`, b.releaseBundle.DeploymentResourceName, replicas))(b)
+  replicas: %d`, replicas))(b)
 	}
 }
 
