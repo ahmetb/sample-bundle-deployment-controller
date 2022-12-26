@@ -22,7 +22,10 @@ var (
 )
 
 type BundleDeploymentSpec struct {
-	Replicas      int    `json:"replicas,omitempty"`
+	//+kubebuilder:validation:Minimum=1
+	Replicas int `json:"replicas,omitempty"`
+
+	//+kubebuilder:validation:Enum=rapid;stable
 	ReleaseBundle string `json:"releaseBundle,omitempty"`
 }
 

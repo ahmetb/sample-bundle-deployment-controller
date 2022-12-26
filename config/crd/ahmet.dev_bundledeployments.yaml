@@ -23,7 +23,7 @@ spec:
       name: GENERATION
       type: integer
     - jsonPath: .status.observedGeneration
-      name: OBSERVED GENERATION
+      name: OBSERVED_GEN
       type: integer
     - jsonPath: .metadata.creationTimestamp
       name: AGE
@@ -47,8 +47,12 @@ spec:
           spec:
             properties:
               releaseBundle:
+                enum:
+                - rapid
+                - stable
                 type: string
               replicas:
+                minimum: 1
                 type: integer
             type: object
           status:
